@@ -1,0 +1,12 @@
+--- Requirements:
+ucimlrepo
+numpy
+pandas
+scikit-learn
+joblib
+
+---Requirements for the notebook only:
+matplotlib
+scipy
+pytorch
+jupyter
