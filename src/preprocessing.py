@@ -4,33 +4,17 @@ import pandas as pd
 import math
 import warnings
 
-def load_data() -> dict[str, pd.DataFrame]:
+def load_data() -> pd.DataFrame:
     """
     Loads and preprocesses the data from UCI Machine Learning Repository.
     Citation:
     Hebrail, G. & Berard, A. (2006). Individual Household Electric Power Consumption [Dataset]. 
     UCI Machine Learning Repository. https://doi.org/10.24432/C58K54.
-
-    The following are the keys for the output dictionary :
-    - "full" -> full dataset
-    - "raw" -> raw dataset
-    - "train" -> train set
-    - "validation" -> validation set
-    - "test" -> test set
-    - "full_train" -> full train set
-
-    Note: the full dataset's missing values has not been imputed.
     """
-    # Download original data
     df = load_raw_data()
-    raw_df = df.copy()
+    df = clean_data(df)
 
-    dfs = clean_data(df)
-
-    dfs["full"] = df
-    dfs["raw"] = raw_df
-
-    return dfs
+    return df
 
 
 def load_raw_data() -> pd.DataFrame:
@@ -45,15 +29,9 @@ def load_raw_data() -> pd.DataFrame:
     return individual_household_electric_power_consumption.data.features
 
 
-def clean_data(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
+def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Splits and cleans the data. 
-
-    The following are the keys for the output dictionary :
-    - "train" -> train set
-    - "validation" -> validation set
-    - "test" -> test set
-    - "full_train" -> full train set
+    Cleans the data. 
     """
     numeric_cols = [
         "Global_active_power",
@@ -77,8 +55,10 @@ def clean_data(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     # Aggregate to hourly data
     df = aggregate_hourly(df)
 
-    # Split the data and impute missing values 
-    return split_and_impute(df)
+    # Impute missing values 
+    df = impute(df)
+
+    return df
 
 
 def aggregate_hourly(df: pd.DataFrame) -> pd.DataFrame:
@@ -89,15 +69,9 @@ def aggregate_hourly(df: pd.DataFrame) -> pd.DataFrame:
     return df.resample("1h").mean()
 
 
-def split_and_impute(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
+def impute(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Splits the data and fills missing values. 
-
-    The following are the keys for the output dictionary :
-    - "train" -> train set
-    - "validation" -> validation set
-    - "test" -> test set
-    - "full_train" -> full train set
+    Fills missing values. 
     """
 
     # Split data
@@ -105,22 +79,13 @@ def split_and_impute(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     train_set = splitted_data["train"]
     validation_set = splitted_data["validation"]
     test_set = splitted_data["test"]
-    full_train_set = splitted_data["full_train"]
 
     # Clean data
     clean_train_set = impute_data(train_set)
     clean_val_set = impute_data(validation_set, True, df)
     clean_test_set = impute_data(test_set, True, df)
-    clean_full_train_set = impute_data(full_train_set)
 
-    output = {
-        "train": clean_train_set,
-        "validation": clean_val_set,
-        "test": clean_test_set,
-        "full_train": clean_full_train_set
-    }
-
-    return output
+    return pd.concat([clean_train_set, clean_val_set, clean_test_set])
 
 
 def split_data(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
@@ -168,7 +133,7 @@ def impute_data(df: pd.DataFrame, is_eval_data=False, df_full: pd.DataFrame = No
             return eval_imputer(df, df_full)
 
         else:
-            warnings.warn("Tried cleaning evaluation data without passing the full dataset.")
+            warnings.warn("Tried imputing evaluation data without passing the full dataset.")
             return None
 
     else:
