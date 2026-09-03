@@ -2,7 +2,6 @@ from ucimlrepo import fetch_ucirepo
 import numpy as np
 import pandas as pd
 import math
-import warnings
 
 def load_data() -> pd.DataFrame:
     """
@@ -48,7 +47,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df[numeric_cols] = df[numeric_cols].astype(float)
 
     # Set the date and time as the index 
-    df["datetime"] = pd.to_datetime( df["Date"] + " " + df["Time"])
+    df["datetime"] = pd.to_datetime( df["Date"] + " " + df["Time"], dayfirst=True)
     df = df.set_index("datetime")
     df = df.drop(columns=["Date", "Time"])
 
@@ -81,9 +80,9 @@ def impute(df: pd.DataFrame) -> pd.DataFrame:
     test_set = splitted_data["test"]
 
     # Clean data
-    clean_train_set = impute_data(train_set)
-    clean_val_set = impute_data(validation_set, True, df)
-    clean_test_set = impute_data(test_set, True, df)
+    clean_train_set = pattern_imputer(train_set)
+    clean_val_set = eval_imputer(validation_set, df)
+    clean_test_set = eval_imputer(test_set, df)
 
     return pd.concat([clean_train_set, clean_val_set, clean_test_set])
 
@@ -115,29 +114,6 @@ def split_data(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     }
 
     return output
-
-
-def impute_data(df: pd.DataFrame, is_eval_data=False, df_full: pd.DataFrame = None) -> pd.DataFrame:
-    """
-    Fills missing values in the data.
-
-    Parameters :
-        - df: the dataframe to clean.
-        - is_eval_data: True if df is an evaluation dataset, i.e. either a validation or test set. If set to True, the next parameter needs a value.
-        - df_full: the full dataset.
-    """
-
-    if (is_eval_data):
-
-        if (df_full is not None):
-            return eval_imputer(df, df_full)
-
-        else:
-            warnings.warn("Tried imputing evaluation data without passing the full dataset.")
-            return None
-
-    else:
-        return pattern_imputer( df )
             
 
 def pattern_imputer(df: pd.DataFrame) -> pd.DataFrame:

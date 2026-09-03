@@ -18,7 +18,7 @@ def feature_engineer(df: pd.DataFrame) -> pd.DataFrame:
     df["day_of_week"] = df.index.day_of_week
 
     # Delete some features
-    df[delete_features] = df.drop(delete_features, axis=1)
+    df = df.drop(delete_features, axis=1)
 
     # Shift some features
     df[leaking_features] = df[leaking_features].shift(1)
