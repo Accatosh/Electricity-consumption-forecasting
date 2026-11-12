@@ -2,17 +2,25 @@ import joblib
 import pandas as pd
 import numpy as np
 from sklearn.pipeline import Pipeline
+from pathlib import Path
 
-hgb_model: Pipeline = None
+hgb_model: Pipeline | None = None
+MODEL_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "models"
+    / "electricity_consumption_hgb_model.pkl"
+)
 
 def load_model() -> Pipeline:
     """
     Loads the trained HGB model into the global variable for the model. Also, returns the model.
     """
     global hgb_model
-    hgb_model = joblib.load("models/electricity_consumption_hgb_model.pkl")
-    return hgb_model
 
+    if hgb_model is None:
+        hgb_model = joblib.load(MODEL_PATH)
+
+    return hgb_model
 
 def predict_with_model(X: pd.DataFrame | np.ndarray) -> np.ndarray:
     """
