@@ -6,6 +6,36 @@ Predict hourly household electricity consumption using historical consumption da
 
 Most of the project work and workflow are in the Jupyter notebook. Based on this, some Python modules have been created to reproduce the project and make use of the data processing for this dataset.
 
+## Repository structure
+
+* src/ - Contains all modules with functions based on the result found in the notebook.
+    * features.py - Contains a function to add and remove features from the original dataset.
+    * preprocessing.py - Contains functions to modify the dataset.
+    * predict.py - Contains functions to use and forecast with the final model obtained in the notebook.
+
+* tests/ - Contains tests for selected functions in modules in the *src* folder.
+    * test_features.py - Contains tests for `features.py`
+    * test_preprocessing.py - Contains tests for `preprocessing.py`
+    * test_predict.py - Contains tests for `predict.py`
+
+* models/
+    * electricity_consumption_hgb_model.pkl - Contains the final model obtained in the notebook.
+
+* notebooks/
+    * Electricity_consumption_forecasting.ipynb - Contains the Jupyter notebook that investigated electrical consumption based on a dataset.
+
+## How to run
+
+Clone the project or download the zip file. Dependencies can be installed in the terminal using `pip install -r requirements.txt`.
+
+A simple program to predict the next hour's electrical consumption can be started by importing the module `predict.py` and calling the function `prediction_interface()`. This can be done by opening a terminal, changing directory to "src" and then starting Python.
+
+The module `predict.py` also contains other functions to use and forecast with the final model.
+
+The files `preprocessing.py` and `features.py` contain functions to modify the dataset to how it was used in this project.
+
+The functions in these files have automated tests found in the *tests* folder. These tests can be run by using *pytest* in the *Electricity-consumption-forecasting* folder.
+
 ## Dataset
 
 The dataset used in this project is:
@@ -119,9 +149,3 @@ The model also only predicts the next hour, as it relies on data from the previo
 Features, such as weather, electricity prices and the number of occupants, could be added to improve accuracy.
 
 The most recent data point in the dataset is from 2010, and may thus not represent current electrical consumption patterns, especially since technology has changed during the 16 years since.
-
-## How to run
-
-A simple program to predict the next hour's electrical consumption can be started by importing the module *predict.py* and calling the function *prediction_interface()*. The module also contains other functions to use and forecast with the final model.
-
-The files *preprocessing.py* and *features.py* contain functions to modify the dataset to how it was used in this project.
