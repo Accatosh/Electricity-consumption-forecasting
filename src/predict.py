@@ -5,11 +5,17 @@ from sklearn.pipeline import Pipeline
 from pathlib import Path
 
 hgb_model: Pipeline | None = None
-MODEL_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "models"
-    / "electricity_consumption_hgb_model.pkl"
-)
+MODEL_PATH = ( Path(__file__).resolve().parents[1] / "models" / "electricity_consumption_hgb_model.pkl" )
+
+def get_model():
+    """Returns the trained HGB model. Note: it does not load the model."""
+    global hgb_model
+    return hgb_model
+
+def reset_model():
+    """Sets the HGB model variable to None. Mainly for testing purpose."""
+    global hgb_model
+    hgb_model = None
 
 def load_model() -> Pipeline:
     """
