@@ -49,8 +49,4 @@ def test_feature_engineer_shifts_submetering_features():
     result[result.columns] = result[result.columns].astype("float64")
     expected_result[expected_result.columns] = expected_result[expected_result.columns].astype("float64")
 
-    print(result)
-    print("---")
-    print(expected_result)
-
     assert result.equals(expected_result)
