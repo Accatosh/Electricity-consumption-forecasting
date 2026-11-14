@@ -6,6 +6,18 @@ Predict hourly household electricity consumption using historical consumption da
 
 Most of the project work and workflow are in the Jupyter notebook. Based on this, some Python modules have been created to reproduce the project and make use of the data processing for this dataset.
 
+## How to run
+
+Clone the project or download the zip file. Dependencies can be installed in the terminal using `pip install -r requirements.txt`.
+
+A simple program to predict the next hour's electrical consumption can be started by importing the module `predict.py` and calling the function `prediction_interface()`. This can be done by opening a terminal, changing directory to "src" and then starting Python.
+
+The module `predict.py` also contains other functions to use and forecast with the final model.
+
+The files `preprocessing.py` and `features.py` contain functions to modify the dataset to how it was used in this project.
+
+The functions in these files have automated tests found in the *tests* folder. These tests can be run by using *pytest* in the *Electricity-consumption-forecasting* folder.
+
 ## Repository structure
 
 * src/ - Contains all modules with functions based on the result found in the notebook.
@@ -23,18 +35,6 @@ Most of the project work and workflow are in the Jupyter notebook. Based on this
 
 * notebooks/
     * Electricity_consumption_forecasting.ipynb - Contains the Jupyter notebook that investigated electrical consumption based on a dataset.
-
-## How to run
-
-Clone the project or download the zip file. Dependencies can be installed in the terminal using `pip install -r requirements.txt`.
-
-A simple program to predict the next hour's electrical consumption can be started by importing the module `predict.py` and calling the function `prediction_interface()`. This can be done by opening a terminal, changing directory to "src" and then starting Python.
-
-The module `predict.py` also contains other functions to use and forecast with the final model.
-
-The files `preprocessing.py` and `features.py` contain functions to modify the dataset to how it was used in this project.
-
-The functions in these files have automated tests found in the *tests* folder. These tests can be run by using *pytest* in the *Electricity-consumption-forecasting* folder.
 
 ## Dataset
 
