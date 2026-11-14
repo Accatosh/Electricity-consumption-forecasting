@@ -20,7 +20,7 @@ def test_load_model_stores_loaded_model():
     result = load_model()
 
     assert get_model() is not None, "load_model does not save the loaded model."
-    assert type(result) == Pipeline
+    assert isinstance(result, Pipeline)
 
 def test_predict_with_model_loads_model_if_needed():
     global pred_input
@@ -30,8 +30,10 @@ def test_predict_with_model_loads_model_if_needed():
     pred = predict_with_model(pred_input)
 
     assert get_model() is not None, "predict_with_model does not load the model when a model has not been loaded."
-    assert type(pred) == np.ndarray
-    assert type(pred[0]) == np.float64
+    assert isinstance(pred, np.ndarray)
+    assert pred.shape == (1,), "Prediction is incorrect shape."
+    assert isinstance(pred[0], np.float64)
+    assert np.isfinite(pred[0])
 
 def test_predict_with_model_uses_loaded_model():
     global pred_input
@@ -44,5 +46,7 @@ def test_predict_with_model_uses_loaded_model():
     pred = predict_with_model(pred_input)
 
     assert get_model() == loaded_model, "The pre-loaded model is not used."
-    assert type(pred) == np.ndarray
-    assert type(pred[0]) == np.float64
+    assert isinstance(pred, np.ndarray)
+    assert pred.shape == (1,), "Prediction is incorrect shape."
+    assert isinstance(pred[0], np.float64)
+    assert np.isfinite(pred[0])
